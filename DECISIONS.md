@@ -13,3 +13,9 @@ coins. The customer never loses money.
 - **Decision**: domain and application code is written test-first. Skeleton, config and CLI wiring are tested after.
 - **Consequence**: one commit per behaviour, test and code together. Test names describe business behaviour.
 - **Discarded**: separate failing-test commits (break CI and `git bisect`); outside-in double-loop TDD from the CLI (reorders the roadmap for little gain).
+
+## D-003: State persisted in SQLite
+
+- **Decision**: the machine's state is saved in SQLite after every command, behind the repository port.
+- **Consequence**: state (stock, change, Cash Box, balance) survives restarts (ie: a power failure). Each command's changes are saved in one SQLite transaction.
+- **Discarded**: in-memory only (state lost on restart); JSON file (hand-rolled transactions and locking); database server (unneeded setup).
