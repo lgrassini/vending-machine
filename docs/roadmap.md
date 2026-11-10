@@ -9,5 +9,5 @@
 7. **Service Machine**
 8. **Application layer**: handlers, Machine Status query, repository.
 9. **CLI**: spec actions, STATUS, acceptance tests.
-10. **Persistent adapter** (optional)
+10. **SQLite adapter**
 11. **README and final check**
