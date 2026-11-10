@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace VendingMachine\Tests;
+namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 

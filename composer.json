@@ -7,12 +7,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendingMachine\\": "src/"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendingMachine\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/"
         }
     },
     "config": {
