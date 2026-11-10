@@ -1,0 +1,21 @@
+{
+    "name": "lgrassini/vending-machine",
+    "description": "Vending machine modelled with DDD and hexagonal architecture.",
+    "type": "project",
+    "require": {
+        "php": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "VendingMachine\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VendingMachine\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
