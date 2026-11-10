@@ -14,7 +14,8 @@ Vending machine in PHP, built with DDD and hexagonal architecture.
 
 - One feature = one branch off `main` = one PR. Never commit to `main`.
 - Small commits, conventional commit messages.
-- TDD for domain and application code (D-002). One commit per behaviour, test and code together.
+- TDD for domain and application code (D-002): one test at a time, red > green > refactor, then 
+commit test and code together.
 - Coverage of new code ≥ 80%.
 - Run the full test suite and linters before opening a PR.
 - PR description: what changed, why, related decision, how it was tested.
