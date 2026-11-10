@@ -11,6 +11,6 @@ final class SkeletonTest extends TestCase
 {
     public function testPipelineRuns(): void
     {
-        self::assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 }
