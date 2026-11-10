@@ -1,0 +1,15 @@
+# Decisions
+
+## D-001: The machine never returns 1 coins
+
+- **Decision**: only 0.05, 0.10 and 0.25 are returned, in order not to break the contract
+specified in the specs since the domain expert I consulted could not confirm it is a typo.
+- **Consequence**: a 1 coin is rejected if the machine can't guarantee returning it in smaller 
+coins. The customer never loses money.
+- **Discarded**: returning the inserted 1 coin. Simpler, but breaks the spec contract.
+
+## D-002: TDD for domain and application code
+
+- **Decision**: domain and application code is written test-first. Skeleton, config and CLI wiring are tested after.
+- **Consequence**: one commit per behaviour, test and code together. Test names describe business behaviour.
+- **Discarded**: separate failing-test commits (break CI and `git bisect`); outside-in double-loop TDD from the CLI (reorders the roadmap for little gain).
