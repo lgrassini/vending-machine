@@ -35,4 +35,11 @@ final class MoneyTest extends TestCase
     {
         self::assertSame(40, Money::fromCents(65)->subtract(Money::fromCents(25))->cents());
     }
+
+    #[Test]
+    public function it_is_less_than_another_amount(): void
+    {
+        self::assertTrue(Money::fromCents(25)->isLessThan(Money::fromCents(65)));
+        self::assertFalse(Money::fromCents(65)->isLessThan(Money::fromCents(65)));
+    }
 }
