@@ -5,15 +5,15 @@ deptrac:
     - name: Domain
       collectors:
         - type: directory
-          value: src/Domain/.*
+          value: src/[^/]+/Domain/.*
     - name: Application
       collectors:
         - type: directory
-          value: src/Application/.*
+          value: src/[^/]+/Application/.*
     - name: Infrastructure
       collectors:
         - type: directory
-          value: src/Infrastructure/.*
+          value: src/[^/]+/Infrastructure/.*
   ruleset:
     Domain: ~
     Application:

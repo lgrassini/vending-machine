@@ -7,6 +7,7 @@ Ubiquitous language of the Vending context. Code, tests and docs use these exact
 - **Vending Machine**: sells items for coins. Keeps track of items, available change and balance.
 - **Customer**: inserts coins, selects items, asks for coins back.
 - **Service Operator**: refills items and available change.
+- **Money**: an amount expressed in cents: 0.05 is 5 cents, 1 is 100 cents (see D-006).
 - **Coin**: accepted values are 0.05, 0.10, 0.25 and 1. The machine only returns 0.05, 0.10 and 0.25.
 - **Balance**: money the current customer has inserted and not yet spent or got back.
 - **Available Change**: 0.05, 0.10 and 0.25 coins the machine holds for giving change.
