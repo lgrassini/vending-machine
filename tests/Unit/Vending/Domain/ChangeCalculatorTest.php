@@ -27,4 +27,15 @@ final class ChangeCalculatorTest extends TestCase
 
         self::assertSame([Coin::TenCents], $change);
     }
+
+    #[Test]
+    public function it_is_not_greedy(): void
+    {
+        $change = new ChangeCalculator()->calculate(
+            Money::fromCents(30),
+            [Coin::TwentyFiveCents, Coin::TenCents, Coin::TenCents, Coin::TenCents],
+        );
+
+        self::assertSame([Coin::TenCents, Coin::TenCents, Coin::TenCents], $change);
+    }
 }
