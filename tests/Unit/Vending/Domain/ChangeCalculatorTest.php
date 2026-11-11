@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Vending\Domain;
+
+use App\Vending\Domain\ChangeCalculator;
+use App\Vending\Domain\Coin;
+use App\Vending\Domain\Money;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+final class ChangeCalculatorTest extends TestCase
+{
+    #[Test]
+    public function it_gives_change_with_a_single_coin(): void
+    {
+        $change = new ChangeCalculator()->calculate(Money::fromCents(25), [Coin::TwentyFiveCents]);
+
+        self::assertSame([Coin::TwentyFiveCents], $change);
+    }
+
+    #[Test]
+    public function it_gives_only_the_coins_needed(): void
+    {
+        $change = new ChangeCalculator()->calculate(Money::fromCents(10), [Coin::TwentyFiveCents, Coin::TenCents]);
+
+        self::assertSame([Coin::TenCents], $change);
+    }
+}
