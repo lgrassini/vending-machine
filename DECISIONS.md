@@ -41,3 +41,9 @@ two decimals.
 - **Consequence**: exact arithmetic, no floating-point rounding.
 - **Discarded**: floats (rounding errors); a currency per amount (one machine, one currency); 
 supporting currencies without cents, like yen, now (speculative).
+
+## D-007: Change by backtracking
+
+- **Decision**: the change calculator uses backtracking: try the biggest coins first, undo a choice when stuck, stop at the first exact match.
+- **Consequence**: exact change is always found when one exists. Exponential in theory, instant for the few dozen coins a machine holds. Preferring other coins (e.g. the ones with most stock) is a change of order.
+- **Discarded**: greedy (fails with limited coins, e.g. 0.30 from one 0.25 and three 0.10); dynamic programming (predictable time, but more code for no gain at this scale).
