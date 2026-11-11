@@ -26,6 +26,7 @@ commit test and code together.
 - No scope, abstractions or "nice to haves" beyond the spec and `DECISIONS.md`.
 - On any ambiguity not covered by `DECISIONS.md`: stop and ask.
 - Never write the name of the company this exercise is for, anywhere (code, docs, commits, PRs).
-- Keep code and docs simple and to the point. No bloat. No Markdown tables.
+- Keep code and docs simple and to the point: no bloated code or text, senior and pragmatic. No Markdown tables.
+- Replies: short and to the point; details only when asked. Pragmatic over exhaustive.
 - Comments: a one-line docblock per class (what it is, why if not obvious); otherwise only the 
 "why" (business rule, decision ID) and types PHP can't express. Never repeat the signature.
