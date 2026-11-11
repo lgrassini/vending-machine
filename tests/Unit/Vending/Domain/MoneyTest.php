@@ -15,4 +15,12 @@ final class MoneyTest extends TestCase
     {
         self::assertSame(65, Money::fromCents(65)->cents());
     }
+
+    #[Test]
+    public function it_is_never_negative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Money::fromCents(-5);
+    }
 }
