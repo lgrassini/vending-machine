@@ -34,6 +34,11 @@ final readonly class Money
         return $this->cents < $other->cents;
     }
 
+    public function isZero(): bool
+    {
+        return $this->cents === 0;
+    }
+
     public function cents(): int
     {
         return $this->cents;
