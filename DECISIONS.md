@@ -33,3 +33,11 @@ coins. The customer never loses money.
 (new hardware, new rules). A new coin is one enum case.
 - **Discarded**: coins as data or as per-machine configuration (only pays off with multiple 
 currencies or markets).
+
+## D-006: Amounts in cents
+
+- **Decision**: Money is an integer amount of cents. The spec's values (0.05, 0.10, 0.25) imply
+two decimals.
+- **Consequence**: exact arithmetic, no floating-point rounding.
+- **Discarded**: floats (rounding errors); a currency per amount (one machine, one currency); 
+supporting currencies without cents, like yen, now (speculative).
