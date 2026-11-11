@@ -23,4 +23,10 @@ final class MoneyTest extends TestCase
 
         Money::fromCents(-5);
     }
+
+    #[Test]
+    public function it_adds_money(): void
+    {
+        self::assertSame(35, Money::fromCents(25)->add(Money::fromCents(10))->cents());
+    }
 }
