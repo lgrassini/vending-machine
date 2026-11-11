@@ -25,3 +25,11 @@ coins. The customer never loses money.
 - **Decision**: a single bounded context, Vending, in a modular-monolith layout: `src/Vending/{Domain,Application,Infrastructure}`.
 - **Consequence**: a new context (e.g. Payments) is a sibling folder. Deptrac applies the layer rules to every context.
 - **Discarded**: one flat `src/` (no room for new contexts); a separate Maintenance context (servicing uses the same model and rules).
+
+## D-005: Coins are an enum, Items are data
+
+- **Decision**: accepted coins are a PHP enum; Items (selector, price, stock) are data.
+- **Consequence**: Items change at operational speed (Service Machine), coins at release speed 
+(new hardware, new rules). A new coin is one enum case.
+- **Discarded**: coins as data or as per-machine configuration (only pays off with multiple 
+currencies or markets).
