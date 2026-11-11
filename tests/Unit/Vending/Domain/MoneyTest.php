@@ -29,4 +29,10 @@ final class MoneyTest extends TestCase
     {
         self::assertSame(35, Money::fromCents(25)->add(Money::fromCents(10))->cents());
     }
+
+    #[Test]
+    public function it_subtracts_money(): void
+    {
+        self::assertSame(40, Money::fromCents(65)->subtract(Money::fromCents(25))->cents());
+    }
 }
