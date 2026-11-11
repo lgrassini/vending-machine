@@ -16,4 +16,13 @@ final class CoinTest extends TestCase
     {
         self::assertEquals(Money::fromCents(25), Coin::TwentyFiveCents->money());
     }
+
+    #[Test]
+    public function it_never_returns_1_coins(): void
+    {
+        self::assertFalse(Coin::One->isReturnable());
+        self::assertTrue(Coin::FiveCents->isReturnable());
+        self::assertTrue(Coin::TenCents->isReturnable());
+        self::assertTrue(Coin::TwentyFiveCents->isReturnable());
+    }
 }
