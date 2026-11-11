@@ -1,6 +1,6 @@
 RUN = docker compose run --rm -T app
 
-.PHONY: install test lint fix
+.PHONY: install test coverage lint fix
 
 install:
 	docker compose build
@@ -8,6 +8,9 @@ install:
 
 test:
 	$(RUN) vendor/bin/phpunit
+
+coverage:
+	$(RUN) vendor/bin/phpunit --coverage-text
 
 lint:
 	$(RUN) vendor/bin/phpstan analyse --no-progress
