@@ -38,4 +38,16 @@ final class ChangeCalculatorTest extends TestCase
 
         self::assertSame([Coin::TenCents, Coin::TenCents, Coin::TenCents], $change);
     }
+
+    #[Test]
+    public function it_gives_nothing_when_exact_change_is_impossible(): void
+    {
+        self::assertNull(new ChangeCalculator()->calculate(Money::fromCents(5), [Coin::TenCents]));
+    }
+
+    #[Test]
+    public function it_gives_no_coins_for_zero(): void
+    {
+        self::assertSame([], new ChangeCalculator()->calculate(Money::fromCents(0), [Coin::TenCents]));
+    }
 }
