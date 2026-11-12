@@ -16,4 +16,13 @@ final class Item
             throw new \InvalidArgumentException("Stock can't be negative, got {$stock}.");
         }
     }
+
+    public function dispense(): void
+    {
+        if ($this->stock === 0) {
+            throw new \InvalidArgumentException("Item {$this->selector->value} is out of stock.");
+        }
+
+        $this->stock--;
+    }
 }

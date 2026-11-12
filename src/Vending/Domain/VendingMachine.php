@@ -11,13 +11,20 @@ final class VendingMachine
 
     private Coins $cashBox;
 
+    /** @var array<string, Item> keyed by Selector value */
+    private array $items = [];
+
     /** @var list<DomainEvent> */
     private array $events = [];
 
-    public function __construct(private Coins $availableChange)
+    public function __construct(private Coins $availableChange, Item ...$items)
     {
         $this->balance = Money::fromCents(0);
         $this->cashBox = Coins::empty();
+
+        foreach ($items as $item) {
+            $this->items[$item->selector->value] = $item;
+        }
     }
 
     public function insertCoin(Money $inserted): void
@@ -58,12 +65,49 @@ final class VendingMachine
         $coins = new ChangeCalculator()->calculate($this->balance, $this->availableChange)
             ?? throw new \LogicException("Balance of {$this->balance->cents()} cents can't be refunded from Available Change.");
 
-        foreach ($coins as $coin) {
-            $this->availableChange = $this->availableChange->remove($coin);
-        }
-
+        $this->removeFromAvailableChange($coins);
         $this->balance = Money::fromCents(0);
         $this->events[] = new CoinsReturned($coins);
+    }
+
+    public function selectItem(Selector $selector): void
+    {
+        $item = $this->items[$selector->value] ?? null;
+
+        if ($item === null) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::UnknownItem);
+
+            return;
+        }
+
+        if ($item->stock === 0) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::OutOfStock);
+
+            return;
+        }
+
+        if ($this->balance->isLessThan($item->price)) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::InsufficientFunds);
+
+            return;
+        }
+
+        $change = new ChangeCalculator()->calculate($this->balance->subtract($item->price), $this->availableChange);
+
+        if ($change === null) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::ChangeUnavailable);
+
+            return;
+        }
+
+        $item->dispense();
+        $this->removeFromAvailableChange($change);
+        $this->balance = Money::fromCents(0);
+        $this->events[] = new ItemDispensed($selector);
+
+        if ($change !== []) {
+            $this->events[] = new ChangeDispensed($change);
+        }
     }
 
     public function balance(): Money
@@ -88,5 +132,13 @@ final class VendingMachine
         $this->events = [];
 
         return $events;
+    }
+
+    /** @param list<Coin> $coins */
+    private function removeFromAvailableChange(array $coins): void
+    {
+        foreach ($coins as $coin) {
+            $this->availableChange = $this->availableChange->remove($coin);
+        }
     }
 }

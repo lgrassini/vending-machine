@@ -19,4 +19,22 @@ final class ItemTest extends TestCase
 
         new Item(new Selector('WATER'), Money::fromCents(65), -1);
     }
+
+    #[Test]
+    public function it_reduces_stock_when_dispensed(): void
+    {
+        $item = new Item(new Selector('WATER'), Money::fromCents(65), 2);
+
+        $item->dispense();
+
+        self::assertSame(1, $item->stock);
+    }
+
+    #[Test]
+    public function it_never_dispenses_below_zero_stock(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Item(new Selector('WATER'), Money::fromCents(65), 0)->dispense();
+    }
 }
