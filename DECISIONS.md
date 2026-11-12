@@ -59,3 +59,9 @@ supporting currencies without cents, like yen, now (speculative).
 - **Decision**: each input line holds comma-separated actions and gets one `->` output line, as in the spec. SERVICE is `SERVICE, WATER=0.65x10, 0.05x20`: items as `SELECTOR=PRICExSTOCK`, change as `VALUExCOUNT`. Output shows what the machine hands out, plus the reason when it refuses: `0.01 (INVALID COIN)`, `INSUFFICIENT FUNDS`, `SERVICED`. STATUS, not in the spec, shows items, prices and Balance; `bin/service` adds Available Change.
 - **Consequence**: the spec's examples run verbatim. A new product is one more `SELECTOR=PRICExSTOCK`. Unknown actions are input errors handled by the CLI, never reaching the domain.
 - **Discarded**: a SERVICE config file (JSON/YAML), an extra format to maintain for one line of input; silent rejections (the spec gives no output for them, but a silent refusal leaves the customer guessing).
+
+## D-011: Operators see the Cash Box
+
+- **Decision**: the operator's STATUS ends with the Cash Box (e.g. `CASH BOX 1x5`). Customers don't see it.
+- **Consequence**: on a service visit the operator knows what money to collect. It extends D-010, where operator STATUS only added the Available Change.
+- **Discarded**: Cash Box hidden (the operator can't see what to collect); Cash Box in the customer STATUS (it's not the customer's information).

@@ -23,6 +23,7 @@ final readonly class GetMachineStatusHandler
             ),
             $machine->balance(),
             $machine->availableChange(),
+            $machine->cashBox(),
         );
     }
 }

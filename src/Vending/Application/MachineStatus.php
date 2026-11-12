@@ -7,7 +7,7 @@ namespace App\Vending\Application;
 use App\Vending\Domain\Coins;
 use App\Vending\Domain\Money;
 
-/** Read-only view of the machine: Items, Balance and Available Change. */
+/** Read-only view of the machine: Items, Balance, Available Change and Cash Box. */
 final readonly class MachineStatus
 {
     /** @param list<ItemStatus> $items */
@@ -15,5 +15,6 @@ final readonly class MachineStatus
         public array $items,
         public Money $balance,
         public Coins $availableChange,
+        public Coins $cashBox,
     ) {}
 }
