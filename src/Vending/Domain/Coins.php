@@ -7,8 +7,8 @@ namespace App\Vending\Domain;
 /** Coins held by the machine, counted per Coin (e.g. Available Change, Cash Box). */
 final readonly class Coins
 {
-    /** @param array<int, int> $counts count per Coin value (enums can't be array keys) */
-    private function __construct(private array $counts) {}
+    /** @param array<int, int> $countPerCoin keyed by Coin value (enums can't be array keys) */
+    private function __construct(private array $countPerCoin) {}
 
     public static function empty(): self
     {
@@ -28,14 +28,28 @@ final readonly class Coins
 
     public function add(Coin $coin): self
     {
-        $counts = $this->counts;
-        $counts[$coin->value] = $this->count($coin) + 1;
+        $countPerCoin = $this->countPerCoin;
+        $countPerCoin[$coin->value] = $this->count($coin) + 1;
 
-        return new self($counts);
+        return new self($countPerCoin);
     }
 
     public function count(Coin $coin): int
     {
-        return $this->counts[$coin->value] ?? 0;
+        return $this->countPerCoin[$coin->value] ?? 0;
+    }
+
+    /** @return list<Coin> */
+    public function toList(): array
+    {
+        $list = [];
+
+        foreach ($this->countPerCoin as $value => $count) {
+            for ($i = 0; $i < $count; $i++) {
+                $list[] = Coin::from($value);
+            }
+        }
+
+        return $list;
     }
 }

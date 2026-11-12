@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Vending\Domain;
 
 use App\Vending\Domain\ChangeCalculator;
 use App\Vending\Domain\Coin;
+use App\Vending\Domain\Coins;
 use App\Vending\Domain\Money;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ final class ChangeCalculatorTest extends TestCase
     #[Test]
     public function it_gives_change_with_a_single_coin(): void
     {
-        $change = new ChangeCalculator()->calculate(Money::fromCents(25), [Coin::TwentyFiveCents]);
+        $change = new ChangeCalculator()->calculate(Money::fromCents(25), Coins::of(Coin::TwentyFiveCents));
 
         self::assertSame([Coin::TwentyFiveCents], $change);
     }
@@ -23,7 +24,7 @@ final class ChangeCalculatorTest extends TestCase
     #[Test]
     public function it_gives_only_the_coins_needed(): void
     {
-        $change = new ChangeCalculator()->calculate(Money::fromCents(10), [Coin::TwentyFiveCents, Coin::TenCents]);
+        $change = new ChangeCalculator()->calculate(Money::fromCents(10), Coins::of(Coin::TwentyFiveCents, Coin::TenCents));
 
         self::assertSame([Coin::TenCents], $change);
     }
@@ -33,7 +34,7 @@ final class ChangeCalculatorTest extends TestCase
     {
         $change = new ChangeCalculator()->calculate(
             Money::fromCents(30),
-            [Coin::TwentyFiveCents, Coin::TenCents, Coin::TenCents, Coin::TenCents],
+            Coins::of(Coin::TwentyFiveCents, Coin::TenCents, Coin::TenCents, Coin::TenCents),
         );
 
         self::assertSame([Coin::TenCents, Coin::TenCents, Coin::TenCents], $change);
@@ -42,12 +43,12 @@ final class ChangeCalculatorTest extends TestCase
     #[Test]
     public function it_gives_nothing_when_exact_change_is_impossible(): void
     {
-        self::assertNull(new ChangeCalculator()->calculate(Money::fromCents(5), [Coin::TenCents]));
+        self::assertNull(new ChangeCalculator()->calculate(Money::fromCents(5), Coins::of(Coin::TenCents)));
     }
 
     #[Test]
     public function it_gives_no_coins_for_zero(): void
     {
-        self::assertSame([], new ChangeCalculator()->calculate(Money::fromCents(0), [Coin::TenCents]));
+        self::assertSame([], new ChangeCalculator()->calculate(Money::fromCents(0), Coins::of(Coin::TenCents)));
     }
 }

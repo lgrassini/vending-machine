@@ -7,15 +7,13 @@ namespace App\Vending\Domain;
 /** Finds the coins that make up an amount exactly, using only the Available Change (D-007). */
 final class ChangeCalculator
 {
-    /**
-     * @param list<Coin> $availableChange
-     * @return list<Coin>|null null when no exact combination exists
-     */
-    public function calculate(Money $change, array $availableChange): ?array
+    /** @return list<Coin>|null null when no exact combination exists */
+    public function calculate(Money $change, Coins $availableChange): ?array
     {
-        usort($availableChange, static fn(Coin $a, Coin $b): int => $b->value <=> $a->value);
+        $coins = $availableChange->toList();
+        usort($coins, static fn(Coin $a, Coin $b): int => $b->value <=> $a->value);
 
-        return $this->search($change, $availableChange);
+        return $this->search($change, $coins);
     }
 
     /**
