@@ -77,6 +77,7 @@ final class VendingMachine
     {
         $item = $this->items[$selector->value];
 
+        $item->dispense();
         $this->balance = $this->balance->subtract($item->price);
         $this->events[] = new ItemDispensed($selector);
     }

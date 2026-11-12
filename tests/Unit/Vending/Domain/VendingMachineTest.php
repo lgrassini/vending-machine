@@ -145,4 +145,16 @@ final class VendingMachineTest extends TestCase
         self::assertEquals([new ItemDispensed(new Selector('WATER'))], $machine->releaseEvents());
         self::assertTrue($machine->balance()->isZero());
     }
+
+    #[Test]
+    public function it_reduces_the_stock_of_the_dispensed_item(): void
+    {
+        $water = new Item(new Selector('WATER'), Money::fromCents(25), 2);
+        $machine = new VendingMachine(Coins::empty(), $water);
+        $machine->insertCoin(Money::fromCents(25));
+
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertSame(1, $water->stock);
+    }
 }
