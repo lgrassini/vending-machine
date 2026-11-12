@@ -11,13 +11,20 @@ final class VendingMachine
 
     private Coins $cashBox;
 
+    /** @var array<string, Item> keyed by Selector value */
+    private array $items = [];
+
     /** @var list<DomainEvent> */
     private array $events = [];
 
-    public function __construct(private Coins $availableChange)
+    public function __construct(private Coins $availableChange, Item ...$items)
     {
         $this->balance = Money::fromCents(0);
         $this->cashBox = Coins::empty();
+
+        foreach ($items as $item) {
+            $this->items[$item->selector->value] = $item;
+        }
     }
 
     public function insertCoin(Money $inserted): void
@@ -64,6 +71,14 @@ final class VendingMachine
 
         $this->balance = Money::fromCents(0);
         $this->events[] = new CoinsReturned($coins);
+    }
+
+    public function selectItem(Selector $selector): void
+    {
+        $item = $this->items[$selector->value];
+
+        $this->balance = $this->balance->subtract($item->price);
+        $this->events[] = new ItemDispensed($selector);
     }
 
     public function balance(): Money

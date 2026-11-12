@@ -10,7 +10,10 @@ use App\Vending\Domain\CoinRejected;
 use App\Vending\Domain\CoinRejectionReason;
 use App\Vending\Domain\Coins;
 use App\Vending\Domain\CoinsReturned;
+use App\Vending\Domain\Item;
+use App\Vending\Domain\ItemDispensed;
 use App\Vending\Domain\Money;
+use App\Vending\Domain\Selector;
 use App\Vending\Domain\VendingMachine;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -128,5 +131,18 @@ final class VendingMachineTest extends TestCase
         $machine->returnCoin();
 
         self::assertSame(0, $machine->availableChange()->count(Coin::TwentyFiveCents));
+    }
+
+    #[Test]
+    public function it_dispenses_an_item(): void
+    {
+        $machine = new VendingMachine(Coins::empty(), new Item(new Selector('WATER'), Money::fromCents(25), 1));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->releaseEvents();
+
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertEquals([new ItemDispensed(new Selector('WATER'))], $machine->releaseEvents());
+        self::assertTrue($machine->balance()->isZero());
     }
 }
