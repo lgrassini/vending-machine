@@ -80,6 +80,12 @@ final class VendingMachine
             return;
         }
 
+        if ($item->stock === 0) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::OutOfStock);
+
+            return;
+        }
+
         $change = $this->balance->subtract($item->price);
 
         $item->dispense();

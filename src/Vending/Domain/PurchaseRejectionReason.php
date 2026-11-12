@@ -8,4 +8,5 @@ namespace App\Vending\Domain;
 enum PurchaseRejectionReason
 {
     case UnknownItem;
+    case OutOfStock;
 }
