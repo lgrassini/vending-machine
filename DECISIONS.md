@@ -49,3 +49,7 @@ supporting currencies without cents, like yen, now (speculative).
 - **Decision**: a rejected command records a domain event with a reason: Coin Rejected (Invalid Coin, Refund Not Guaranteed) or Purchase Rejected (Out of Stock, Insufficient Funds, Change Unavailable). Exceptions are only for broken invariants (bugs).
 - **Consequence**: the board maps one-to-one to the code. Every outcome is an event, so output and future reactions (e.g. alerting to refill change) use one model. A new rejection is a new reason.
 - **Discarded**: domain exceptions for rejections (expected business outcomes as control flow, and absent from event storming practice).
+
+## D-009: CLI as the interface
+
+- **Decision**: customers and operators use two command-line entry points. See [ADR-003](docs/adr/003-cli-as-the-interface.md).

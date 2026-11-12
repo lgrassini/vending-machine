@@ -22,6 +22,9 @@ years.**
 - New change rules: they live in one domain service, the change calculator (D-007).
 - New entry points or storage: an HTTP API or a database is just a new adapter, and the domain
   stays untouched.
+- Improved security and telemetry: extensible later via a REST API. Handlers don't know the
+  interface, authorization fits in the application layer (ADR-003), and telemetry builds on the
+  existing domain events and Machine Status query.
 
 ## Business rules in one visible place
 - Invariants live inside the aggregate.
