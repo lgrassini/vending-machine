@@ -34,6 +34,14 @@ final readonly class Coins
         return new self($countPerCoin);
     }
 
+    public function remove(Coin $coin): self
+    {
+        $countPerCoin = $this->countPerCoin;
+        $countPerCoin[$coin->value] = $this->count($coin) - 1;
+
+        return new self($countPerCoin);
+    }
+
     public function count(Coin $coin): int
     {
         return $this->countPerCoin[$coin->value] ?? 0;

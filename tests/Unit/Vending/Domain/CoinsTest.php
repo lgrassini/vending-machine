@@ -24,4 +24,12 @@ final class CoinsTest extends TestCase
     {
         self::assertSame(2, Coins::of(Coin::TenCents, Coin::TenCents)->count(Coin::TenCents));
     }
+
+    #[Test]
+    public function it_removes_a_coin(): void
+    {
+        $coins = Coins::of(Coin::TenCents, Coin::TenCents)->remove(Coin::TenCents);
+
+        self::assertSame(1, $coins->count(Coin::TenCents));
+    }
 }
