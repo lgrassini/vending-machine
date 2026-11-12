@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Vending\Domain;
+
+use App\Vending\Domain\Coin;
+use App\Vending\Domain\Coins;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+final class CoinsTest extends TestCase
+{
+    #[Test]
+    public function it_counts_coins_by_type(): void
+    {
+        $coins = Coins::empty()->add(Coin::TenCents)->add(Coin::TenCents);
+
+        self::assertSame(2, $coins->count(Coin::TenCents));
+    }
+}
