@@ -118,4 +118,15 @@ final class VendingMachineTest extends TestCase
             $machine->releaseEvents(),
         );
     }
+
+    #[Test]
+    public function it_removes_returned_coins_from_available_change(): void
+    {
+        $machine = new VendingMachine(Coins::empty());
+        $machine->insertCoin(Money::fromCents(25));
+
+        $machine->returnCoin();
+
+        self::assertSame(0, $machine->availableChange()->count(Coin::TwentyFiveCents));
+    }
 }

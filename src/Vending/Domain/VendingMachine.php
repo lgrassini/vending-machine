@@ -51,10 +51,16 @@ final class VendingMachine
         $this->events[] = new CoinInserted($coin);
     }
 
+    /** Gives the whole Balance back, in as many coins as needed. */
     public function returnCoin(): void
     {
+        // Can't happen: a 1 coin is accepted only if the Balance stays refundable (D-001).
         $coins = new ChangeCalculator()->calculate($this->balance, $this->availableChange)
-            ?? throw new \LogicException('The Balance must always be refundable (D-001).');
+            ?? throw new \LogicException("Balance of {$this->balance->cents()} cents can't be refunded from Available Change.");
+
+        foreach ($coins as $coin) {
+            $this->availableChange = $this->availableChange->remove($coin);
+        }
 
         $this->balance = Money::fromCents(0);
         $this->events[] = new CoinsReturned($coins);
