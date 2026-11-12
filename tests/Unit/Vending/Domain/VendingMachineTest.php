@@ -13,6 +13,7 @@ use App\Vending\Domain\Coins;
 use App\Vending\Domain\CoinsReturned;
 use App\Vending\Domain\Item;
 use App\Vending\Domain\ItemDispensed;
+use App\Vending\Domain\MachineServiced;
 use App\Vending\Domain\Money;
 use App\Vending\Domain\PurchaseRejected;
 use App\Vending\Domain\PurchaseRejectionReason;
@@ -262,5 +263,46 @@ final class VendingMachineTest extends TestCase
             $machine->releaseEvents(),
         );
         self::assertEquals(Money::fromCents(75), $machine->balance());
+    }
+
+    #[Test]
+    public function it_replaces_available_change_when_serviced(): void
+    {
+        $machine = new VendingMachine(Coins::of(Coin::TwentyFiveCents));
+
+        $machine->service(Coins::of(Coin::TenCents));
+
+        self::assertSame(0, $machine->availableChange()->count(Coin::TwentyFiveCents));
+        self::assertSame(1, $machine->availableChange()->count(Coin::TenCents));
+    }
+
+    #[Test]
+    public function it_replaces_items_when_serviced(): void
+    {
+        $machine = new VendingMachine(Coins::empty(), new Item(new Selector('SODA'), Money::fromCents(150), 1));
+        $machine->service(Coins::empty(), new Item(new Selector('WATER'), Money::fromCents(25), 1));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->releaseEvents();
+
+        $machine->selectItem(new Selector('SODA'));
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertEquals(
+            [
+                new PurchaseRejected(new Selector('SODA'), PurchaseRejectionReason::UnknownItem),
+                new ItemDispensed(new Selector('WATER')),
+            ],
+            $machine->releaseEvents(),
+        );
+    }
+
+    #[Test]
+    public function it_records_machine_serviced(): void
+    {
+        $machine = new VendingMachine(Coins::empty());
+
+        $machine->service(Coins::of(Coin::TenCents));
+
+        self::assertEquals([new MachineServiced()], $machine->releaseEvents());
     }
 }

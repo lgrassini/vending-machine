@@ -19,7 +19,7 @@ years.**
 - New products: products are data (selector, price, count) loaded via SERVICE, not a hard-coded
   enum. Adding one means no code change.
 - New coins: the accepted coins are defined in one place, the Coin value object.
-- New change rules: the change calculator sits behind an interface, so it can be swapped.
+- New change rules: they live in one domain service, the change calculator (D-007).
 - New entry points or storage: an HTTP API or a database is just a new adapter, and the domain
   stays untouched.
 

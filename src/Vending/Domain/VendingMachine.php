@@ -21,10 +21,7 @@ final class VendingMachine
     {
         $this->balance = Money::fromCents(0);
         $this->cashBox = Coins::empty();
-
-        foreach ($items as $item) {
-            $this->items[$item->selector->value] = $item;
-        }
+        $this->replaceItems(...$items);
     }
 
     public function insertCoin(Money $inserted): void
@@ -110,6 +107,13 @@ final class VendingMachine
         }
     }
 
+    public function service(Coins $availableChange, Item ...$items): void
+    {
+        $this->availableChange = $availableChange;
+        $this->replaceItems(...$items);
+        $this->events[] = new MachineServiced();
+    }
+
     public function balance(): Money
     {
         return $this->balance;
@@ -132,6 +136,15 @@ final class VendingMachine
         $this->events = [];
 
         return $events;
+    }
+
+    private function replaceItems(Item ...$items): void
+    {
+        $this->items = [];
+
+        foreach ($items as $item) {
+            $this->items[$item->selector->value] = $item;
+        }
     }
 
     /** @param list<Coin> $coins */
