@@ -114,6 +114,12 @@ final class VendingMachine
         $this->events[] = new MachineServiced();
     }
 
+    /** @return list<Item> */
+    public function items(): array
+    {
+        return array_values($this->items);
+    }
+
     public function balance(): Money
     {
         return $this->balance;
