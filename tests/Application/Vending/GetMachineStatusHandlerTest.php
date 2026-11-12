@@ -40,8 +40,23 @@ final class GetMachineStatusHandlerTest extends TestCase
                 [new ItemStatus(new Selector('WATER'), Money::fromCents(65), 5)],
                 Money::fromCents(25),
                 Coins::of(Coin::TenCents, Coin::TwentyFiveCents),
+                Coins::empty(),
             ),
             $status,
         );
+    }
+
+    #[Test]
+    public function it_reports_the_cash_box(): void
+    {
+        $repository = new InMemoryVendingMachineRepository();
+        new ServiceMachineHandler($repository)(new ServiceMachine(
+            Coins::of(Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents),
+        ));
+        new InsertCoinHandler($repository)(new InsertCoin(Money::fromCents(100)));
+
+        $status = new GetMachineStatusHandler($repository)(new GetMachineStatus());
+
+        self::assertEquals(Coins::of(Coin::One), $status->cashBox);
     }
 }
