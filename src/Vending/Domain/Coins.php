@@ -36,6 +36,10 @@ final readonly class Coins
 
     public function remove(Coin $coin): self
     {
+        if ($this->count($coin) === 0) {
+            throw new \InvalidArgumentException("No {$coin->name} coin to remove.");
+        }
+
         $countPerCoin = $this->countPerCoin;
         $countPerCoin[$coin->value] = $this->count($coin) - 1;
 

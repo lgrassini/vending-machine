@@ -32,4 +32,12 @@ final class CoinsTest extends TestCase
 
         self::assertSame(1, $coins->count(Coin::TenCents));
     }
+
+    #[Test]
+    public function it_never_has_a_negative_count(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Coins::empty()->remove(Coin::TenCents);
+    }
 }
