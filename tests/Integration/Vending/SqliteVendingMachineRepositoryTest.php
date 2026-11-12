@@ -9,6 +9,7 @@ use App\Vending\Domain\Coins;
 use App\Vending\Domain\Item;
 use App\Vending\Domain\Money;
 use App\Vending\Domain\Selector;
+use App\Vending\Domain\VendingMachine;
 use App\Vending\Infrastructure\SqliteVendingMachineRepository;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -46,5 +47,13 @@ final class SqliteVendingMachineRepositoryTest extends TestCase
         $reloaded = new SqliteVendingMachineRepository($this->path)->get();
 
         self::assertEquals($machine, $reloaded);
+    }
+
+    #[Test]
+    public function it_starts_with_an_empty_machine(): void
+    {
+        $machine = new SqliteVendingMachineRepository($this->path)->get();
+
+        self::assertEquals(new VendingMachine(Coins::empty()), $machine);
     }
 }
