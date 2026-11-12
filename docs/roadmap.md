@@ -9,6 +9,6 @@ Cash Box.
 6. **Select Item**
 7. **Service Machine**
 8. **Application layer**: handlers, Machine Status query, repository.
-9. **CLI**: spec actions, STATUS, acceptance tests.
-10. **SQLite adapter**
+9. **SQLite adapter**: before the CLI, since its two entry points share state (ADR-003).
+10. **CLI**: spec actions, STATUS, acceptance tests.
 11. **README and final check**
