@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Vending\Domain;
 
 use App\Vending\Domain\Coin;
+use App\Vending\Domain\CoinInserted;
 use App\Vending\Domain\Money;
 use App\Vending\Domain\VendingMachine;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,5 +21,15 @@ final class VendingMachineTest extends TestCase
         $machine->insertCoin(Coin::TwentyFiveCents);
 
         self::assertEquals(Money::fromCents(25), $machine->balance());
+    }
+
+    #[Test]
+    public function it_records_coin_inserted(): void
+    {
+        $machine = new VendingMachine();
+
+        $machine->insertCoin(Coin::TwentyFiveCents);
+
+        self::assertEquals([new CoinInserted(Coin::TwentyFiveCents)], $machine->releaseEvents());
     }
 }
