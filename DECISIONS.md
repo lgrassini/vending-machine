@@ -47,3 +47,9 @@ supporting currencies without cents, like yen, now (speculative).
 - **Decision**: the change calculator uses backtracking: try the biggest coins first, undo a choice when stuck, stop at the first exact match.
 - **Consequence**: exact change is always found when one exists. Exponential in theory, instant for the few dozen coins a machine holds. Preferring other coins (e.g. the ones with most stock) is a change of order.
 - **Discarded**: greedy (fails with limited coins, e.g. 0.30 from one 0.25 and three 0.10); dynamic programming (predictable time, but more code for no gain at this scale).
+
+## D-008: Rejections are domain events
+
+- **Decision**: a rejected command records a domain event with a reason: Coin Rejected (Invalid Coin, Refund Not Guaranteed) or Purchase Rejected (Out of Stock, Insufficient Funds, Change Unavailable). Exceptions are only for broken invariants (bugs).
+- **Consequence**: the board maps one-to-one to the code. Every outcome is an event, so output and future reactions (e.g. alerting to refill change) use one model. A new rejection is a new reason.
+- **Discarded**: domain exceptions for rejections (expected business outcomes as control flow, and absent from event storming practice).
