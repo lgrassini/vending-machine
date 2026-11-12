@@ -9,21 +9,28 @@ final class VendingMachine
 {
     private Money $balance;
 
-    private Coins $availableChange;
+    private Coins $cashBox;
 
     /** @var list<DomainEvent> */
     private array $events = [];
 
-    public function __construct()
+    public function __construct(private Coins $availableChange)
     {
         $this->balance = Money::fromCents(0);
-        $this->availableChange = Coins::empty();
+        $this->cashBox = Coins::empty();
     }
 
     public function insertCoin(Coin $coin): void
     {
         $this->balance = $this->balance->add($coin->money());
-        $this->availableChange = $this->availableChange->add($coin);
+
+        // 1 coins are never given back, so they don't count as change (D-001).
+        if ($coin->isReturnable()) {
+            $this->availableChange = $this->availableChange->add($coin);
+        } else {
+            $this->cashBox = $this->cashBox->add($coin);
+        }
+
         $this->events[] = new CoinInserted($coin);
     }
 
@@ -35,6 +42,11 @@ final class VendingMachine
     public function availableChange(): Coins
     {
         return $this->availableChange;
+    }
+
+    public function cashBox(): Coins
+    {
+        return $this->cashBox;
     }
 
     /** @return list<DomainEvent> */
