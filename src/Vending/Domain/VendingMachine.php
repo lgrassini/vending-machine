@@ -92,16 +92,21 @@ final class VendingMachine
             return;
         }
 
-        $change = $this->balance->subtract($item->price);
+        $change = new ChangeCalculator()->calculate($this->balance->subtract($item->price), $this->availableChange);
+
+        if ($change === null) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::ChangeUnavailable);
+
+            return;
+        }
 
         $item->dispense();
+        $this->removeFromAvailableChange($change);
         $this->balance = Money::fromCents(0);
         $this->events[] = new ItemDispensed($selector);
 
-        if (!$change->isZero()) {
-            $coins = new ChangeCalculator()->calculate($change, $this->availableChange) ?? [];
-            $this->removeFromAvailableChange($coins);
-            $this->events[] = new ChangeDispensed($coins);
+        if ($change !== []) {
+            $this->events[] = new ChangeDispensed($change);
         }
     }
 
