@@ -274,4 +274,24 @@ final class VendingMachineTest extends TestCase
         self::assertSame(0, $machine->availableChange()->count(Coin::TwentyFiveCents));
         self::assertSame(1, $machine->availableChange()->count(Coin::TenCents));
     }
+
+    #[Test]
+    public function it_replaces_items_when_serviced(): void
+    {
+        $machine = new VendingMachine(Coins::empty(), new Item(new Selector('SODA'), Money::fromCents(150), 1));
+        $machine->service(Coins::empty(), new Item(new Selector('WATER'), Money::fromCents(25), 1));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->releaseEvents();
+
+        $machine->selectItem(new Selector('SODA'));
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertEquals(
+            [
+                new PurchaseRejected(new Selector('SODA'), PurchaseRejectionReason::UnknownItem),
+                new ItemDispensed(new Selector('WATER')),
+            ],
+            $machine->releaseEvents(),
+        );
+    }
 }
