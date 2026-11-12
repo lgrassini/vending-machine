@@ -13,6 +13,7 @@ use App\Vending\Domain\Coins;
 use App\Vending\Domain\CoinsReturned;
 use App\Vending\Domain\Item;
 use App\Vending\Domain\ItemDispensed;
+use App\Vending\Domain\MachineServiced;
 use App\Vending\Domain\Money;
 use App\Vending\Domain\PurchaseRejected;
 use App\Vending\Domain\PurchaseRejectionReason;
@@ -293,5 +294,15 @@ final class VendingMachineTest extends TestCase
             ],
             $machine->releaseEvents(),
         );
+    }
+
+    #[Test]
+    public function it_records_machine_serviced(): void
+    {
+        $machine = new VendingMachine(Coins::empty());
+
+        $machine->service(Coins::of(Coin::TenCents));
+
+        self::assertEquals([new MachineServiced()], $machine->releaseEvents());
     }
 }

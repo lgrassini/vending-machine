@@ -111,6 +111,7 @@ final class VendingMachine
     {
         $this->availableChange = $availableChange;
         $this->replaceItems(...$items);
+        $this->events[] = new MachineServiced();
     }
 
     public function balance(): Money
