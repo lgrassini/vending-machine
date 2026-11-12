@@ -25,7 +25,7 @@ years.**
 
 ## Business rules in one visible place
 - Invariants live inside the aggregate.
-- Errors are named domain exceptions, such as InsufficientFunds or ItemSoldOut.
+- Business rejections are domain events; exceptions are only for broken invariants (D-008).
 - Domain events are recorded.
 - Code names match the event storming language, so a new engineer can map the diagram to the code.
 

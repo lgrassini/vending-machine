@@ -16,15 +16,11 @@ coins. The customer never loses money.
 
 ## D-003: State persisted in SQLite
 
-- **Decision**: the machine's state is saved in SQLite after every command, behind the repository port.
-- **Consequence**: state (stock, change, Cash Box, balance) survives restarts (ie: a power failure). Each command's changes are saved in one SQLite transaction.
-- **Discarded**: in-memory only (state lost on restart); JSON file (hand-rolled transactions and locking); database server (unneeded setup).
+- **Decision**: state is saved in SQLite after every command, in one transaction, behind the repository port. See [ADR-001](docs/adr/001-persist-state-in-sqlite.md).
 
 ## D-004: One bounded context, Vending
 
-- **Decision**: a single bounded context, Vending, in a modular-monolith layout: `src/Vending/{Domain,Application,Infrastructure}`.
-- **Consequence**: a new context (e.g. Payments) is a sibling folder. Deptrac applies the layer rules to every context.
-- **Discarded**: one flat `src/` (no room for new contexts); a separate Maintenance context (servicing uses the same model and rules).
+- **Decision**: a single bounded context, Vending, in a modular-monolith layout. See [ADR-002](docs/adr/002-one-bounded-context.md).
 
 ## D-005: Coins are an enum, Items are data
 
@@ -47,3 +43,9 @@ supporting currencies without cents, like yen, now (speculative).
 - **Decision**: the change calculator uses backtracking: try the biggest coins first, undo a choice when stuck, stop at the first exact match.
 - **Consequence**: exact change is always found when one exists. Exponential in theory, instant for the few dozen coins a machine holds. Preferring other coins (e.g. the ones with most stock) is a change of order.
 - **Discarded**: greedy (fails with limited coins, e.g. 0.30 from one 0.25 and three 0.10); dynamic programming (predictable time, but more code for no gain at this scale).
+
+## D-008: Rejections are domain events
+
+- **Decision**: a rejected command records a domain event with a reason: Coin Rejected (Invalid Coin, Refund Not Guaranteed) or Purchase Rejected (Out of Stock, Insufficient Funds, Change Unavailable). Exceptions are only for broken invariants (bugs).
+- **Consequence**: the board maps one-to-one to the code. Every outcome is an event, so output and future reactions (e.g. alerting to refill change) use one model. A new rejection is a new reason.
+- **Discarded**: domain exceptions for rejections (expected business outcomes as control flow, and absent from event storming practice).
