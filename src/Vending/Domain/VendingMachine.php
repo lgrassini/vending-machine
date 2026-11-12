@@ -22,7 +22,16 @@ final class VendingMachine
 
     public function insertCoin(Coin $coin): void
     {
-        $this->balance = $this->balance->add($coin->money());
+        $balance = $this->balance->add($coin->money());
+
+        // A 1 coin is accepted only if the whole Balance could still be refunded (D-001).
+        if (!$coin->isReturnable() && new ChangeCalculator()->calculate($balance, $this->availableChange) === null) {
+            $this->events[] = new CoinRejected($coin, CoinRejectionReason::RefundNotGuaranteed);
+
+            return;
+        }
+
+        $this->balance = $balance;
 
         // 1 coins are never given back, so they don't count as change (D-001).
         if ($coin->isReturnable()) {

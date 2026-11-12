@@ -6,6 +6,8 @@ namespace App\Tests\Unit\Vending\Domain;
 
 use App\Vending\Domain\Coin;
 use App\Vending\Domain\CoinInserted;
+use App\Vending\Domain\CoinRejected;
+use App\Vending\Domain\CoinRejectionReason;
 use App\Vending\Domain\Coins;
 use App\Vending\Domain\Money;
 use App\Vending\Domain\VendingMachine;
@@ -55,5 +57,19 @@ final class VendingMachineTest extends TestCase
 
         self::assertSame(1, $machine->cashBox()->count(Coin::One));
         self::assertSame(0, $machine->availableChange()->count(Coin::One));
+    }
+
+    #[Test]
+    public function it_rejects_a_1_coin_it_could_not_refund(): void
+    {
+        $machine = new VendingMachine(Coins::empty());
+
+        $machine->insertCoin(Coin::One);
+
+        self::assertEquals(
+            [new CoinRejected(Coin::One, CoinRejectionReason::RefundNotGuaranteed)],
+            $machine->releaseEvents(),
+        );
+        self::assertTrue($machine->balance()->isZero());
     }
 }
