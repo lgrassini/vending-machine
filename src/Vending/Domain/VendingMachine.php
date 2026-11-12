@@ -86,6 +86,12 @@ final class VendingMachine
             return;
         }
 
+        if ($this->balance->isLessThan($item->price)) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::InsufficientFunds);
+
+            return;
+        }
+
         $change = $this->balance->subtract($item->price);
 
         $item->dispense();

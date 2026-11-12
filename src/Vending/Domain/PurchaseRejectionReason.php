@@ -9,4 +9,5 @@ enum PurchaseRejectionReason
 {
     case UnknownItem;
     case OutOfStock;
+    case InsufficientFunds;
 }

@@ -229,4 +229,20 @@ final class VendingMachineTest extends TestCase
         );
         self::assertEquals(Money::fromCents(25), $machine->balance());
     }
+
+    #[Test]
+    public function it_rejects_a_purchase_with_insufficient_funds(): void
+    {
+        $machine = new VendingMachine(Coins::empty(), new Item(new Selector('WATER'), Money::fromCents(65), 1));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->releaseEvents();
+
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertEquals(
+            [new PurchaseRejected(new Selector('WATER'), PurchaseRejectionReason::InsufficientFunds)],
+            $machine->releaseEvents(),
+        );
+        self::assertEquals(Money::fromCents(25), $machine->balance());
+    }
 }
