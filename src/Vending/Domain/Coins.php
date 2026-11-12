@@ -15,6 +15,17 @@ final readonly class Coins
         return new self([]);
     }
 
+    public static function of(Coin ...$coins): self
+    {
+        $collection = self::empty();
+
+        foreach ($coins as $coin) {
+            $collection = $collection->add($coin);
+        }
+
+        return $collection;
+    }
+
     public function add(Coin $coin): self
     {
         $counts = $this->counts;

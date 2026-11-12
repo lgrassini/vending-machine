@@ -18,4 +18,10 @@ final class CoinsTest extends TestCase
 
         self::assertSame(2, $coins->count(Coin::TenCents));
     }
+
+    #[Test]
+    public function it_is_created_from_coins(): void
+    {
+        self::assertSame(2, Coins::of(Coin::TenCents, Coin::TenCents)->count(Coin::TenCents));
+    }
 }
