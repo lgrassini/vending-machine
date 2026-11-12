@@ -16,15 +16,11 @@ coins. The customer never loses money.
 
 ## D-003: State persisted in SQLite
 
-- **Decision**: the machine's state is saved in SQLite after every command, behind the repository port.
-- **Consequence**: state (stock, change, Cash Box, balance) survives restarts (ie: a power failure). Each command's changes are saved in one SQLite transaction.
-- **Discarded**: in-memory only (state lost on restart); JSON file (hand-rolled transactions and locking); database server (unneeded setup).
+- **Decision**: state is saved in SQLite after every command, in one transaction, behind the repository port. See [ADR-001](docs/adr/001-persist-state-in-sqlite.md).
 
 ## D-004: One bounded context, Vending
 
-- **Decision**: a single bounded context, Vending, in a modular-monolith layout: `src/Vending/{Domain,Application,Infrastructure}`.
-- **Consequence**: a new context (e.g. Payments) is a sibling folder. Deptrac applies the layer rules to every context.
-- **Discarded**: one flat `src/` (no room for new contexts); a separate Maintenance context (servicing uses the same model and rules).
+- **Decision**: a single bounded context, Vending, in a modular-monolith layout. See [ADR-002](docs/adr/002-one-bounded-context.md).
 
 ## D-005: Coins are an enum, Items are data
 

@@ -51,6 +51,15 @@ final class VendingMachine
         $this->events[] = new CoinInserted($coin);
     }
 
+    public function returnCoin(): void
+    {
+        $coins = new ChangeCalculator()->calculate($this->balance, $this->availableChange)
+            ?? throw new \LogicException('The Balance must always be refundable (D-001).');
+
+        $this->balance = Money::fromCents(0);
+        $this->events[] = new CoinsReturned($coins);
+    }
+
     public function balance(): Money
     {
         return $this->balance;

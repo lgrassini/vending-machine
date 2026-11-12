@@ -9,6 +9,7 @@ use App\Vending\Domain\CoinInserted;
 use App\Vending\Domain\CoinRejected;
 use App\Vending\Domain\CoinRejectionReason;
 use App\Vending\Domain\Coins;
+use App\Vending\Domain\CoinsReturned;
 use App\Vending\Domain\Money;
 use App\Vending\Domain\VendingMachine;
 use PHPUnit\Framework\Attributes\Test;
@@ -84,6 +85,20 @@ final class VendingMachineTest extends TestCase
             [new CoinRejected(Money::fromCents(1), CoinRejectionReason::InvalidCoin)],
             $machine->releaseEvents(),
         );
+        self::assertTrue($machine->balance()->isZero());
+    }
+
+    #[Test]
+    public function it_returns_the_balance_in_coins(): void
+    {
+        $machine = new VendingMachine(Coins::empty());
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->insertCoin(Money::fromCents(10));
+        $machine->releaseEvents();
+
+        $machine->returnCoin();
+
+        self::assertEquals([new CoinsReturned([Coin::TwentyFiveCents, Coin::TenCents])], $machine->releaseEvents());
         self::assertTrue($machine->balance()->isZero());
     }
 }
