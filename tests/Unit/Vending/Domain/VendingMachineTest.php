@@ -21,7 +21,7 @@ final class VendingMachineTest extends TestCase
     {
         $machine = new VendingMachine(Coins::empty());
 
-        $machine->insertCoin(Coin::TwentyFiveCents);
+        $machine->insertCoin(Money::fromCents(25));
 
         self::assertEquals(Money::fromCents(25), $machine->balance());
     }
@@ -31,7 +31,7 @@ final class VendingMachineTest extends TestCase
     {
         $machine = new VendingMachine(Coins::empty());
 
-        $machine->insertCoin(Coin::TwentyFiveCents);
+        $machine->insertCoin(Money::fromCents(25));
 
         self::assertEquals([new CoinInserted(Coin::TwentyFiveCents)], $machine->releaseEvents());
     }
@@ -41,7 +41,7 @@ final class VendingMachineTest extends TestCase
     {
         $machine = new VendingMachine(Coins::empty());
 
-        $machine->insertCoin(Coin::TwentyFiveCents);
+        $machine->insertCoin(Money::fromCents(25));
 
         self::assertSame(1, $machine->availableChange()->count(Coin::TwentyFiveCents));
     }
@@ -53,7 +53,7 @@ final class VendingMachineTest extends TestCase
             Coins::of(Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents),
         );
 
-        $machine->insertCoin(Coin::One);
+        $machine->insertCoin(Money::fromCents(100));
 
         self::assertSame(1, $machine->cashBox()->count(Coin::One));
         self::assertSame(0, $machine->availableChange()->count(Coin::One));
@@ -64,10 +64,24 @@ final class VendingMachineTest extends TestCase
     {
         $machine = new VendingMachine(Coins::empty());
 
-        $machine->insertCoin(Coin::One);
+        $machine->insertCoin(Money::fromCents(100));
 
         self::assertEquals(
-            [new CoinRejected(Coin::One, CoinRejectionReason::RefundNotGuaranteed)],
+            [new CoinRejected(Money::fromCents(100), CoinRejectionReason::RefundNotGuaranteed)],
+            $machine->releaseEvents(),
+        );
+        self::assertTrue($machine->balance()->isZero());
+    }
+
+    #[Test]
+    public function it_rejects_an_invalid_coin(): void
+    {
+        $machine = new VendingMachine(Coins::empty());
+
+        $machine->insertCoin(Money::fromCents(1));
+
+        self::assertEquals(
+            [new CoinRejected(Money::fromCents(1), CoinRejectionReason::InvalidCoin)],
             $machine->releaseEvents(),
         );
         self::assertTrue($machine->balance()->isZero());

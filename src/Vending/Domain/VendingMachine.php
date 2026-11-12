@@ -20,13 +20,21 @@ final class VendingMachine
         $this->cashBox = Coins::empty();
     }
 
-    public function insertCoin(Coin $coin): void
+    public function insertCoin(Money $inserted): void
     {
-        $balance = $this->balance->add($coin->money());
+        $coin = Coin::tryFromMoney($inserted);
+
+        if ($coin === null) {
+            $this->events[] = new CoinRejected($inserted, CoinRejectionReason::InvalidCoin);
+
+            return;
+        }
+
+        $balance = $this->balance->add($inserted);
 
         // A 1 coin is accepted only if the whole Balance could still be refunded (D-001).
         if (!$coin->isReturnable() && new ChangeCalculator()->calculate($balance, $this->availableChange) === null) {
-            $this->events[] = new CoinRejected($coin, CoinRejectionReason::RefundNotGuaranteed);
+            $this->events[] = new CoinRejected($inserted, CoinRejectionReason::RefundNotGuaranteed);
 
             return;
         }
