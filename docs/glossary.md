@@ -26,7 +26,7 @@ Ubiquitous language of the Vending context. Code, tests and docs use these exact
   - Coin Rejected, reason: Invalid Coin or Refund Not Guaranteed (1 coin the machine could not give back, see D-001)
 - **Select Item** (Customer)
   - Item Dispensed, plus Change Dispensed when there is change
-  - Purchase Rejected, reason: Out of Stock, Insufficient Funds or Change Unavailable
+  - Purchase Rejected, reason: Unknown Item, Out of Stock, Insufficient Funds or Change Unavailable
 - **Return Coin** (Customer)
   - Coins Returned
 - **Service Machine** (Service Operator)
