@@ -110,6 +110,11 @@ final class VendingMachine
         }
     }
 
+    public function service(Coins $availableChange): void
+    {
+        $this->availableChange = $availableChange;
+    }
+
     public function balance(): Money
     {
         return $this->balance;

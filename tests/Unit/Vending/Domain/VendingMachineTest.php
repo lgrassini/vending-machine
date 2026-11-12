@@ -263,4 +263,15 @@ final class VendingMachineTest extends TestCase
         );
         self::assertEquals(Money::fromCents(75), $machine->balance());
     }
+
+    #[Test]
+    public function it_replaces_available_change_when_serviced(): void
+    {
+        $machine = new VendingMachine(Coins::of(Coin::TwentyFiveCents));
+
+        $machine->service(Coins::of(Coin::TenCents));
+
+        self::assertSame(0, $machine->availableChange()->count(Coin::TwentyFiveCents));
+        self::assertSame(1, $machine->availableChange()->count(Coin::TenCents));
+    }
 }
