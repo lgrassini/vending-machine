@@ -19,18 +19,15 @@ Ubiquitous language of the Vending context. Code, tests and docs use these exact
 - **Stock**: how many units of an item are left. Never negative.
 - **Machine Status**: read-only view of items (selector, price, stock), balance and available change.
 
-## Commands and events
+## Commands, events and exceptions
 
 - **Insert Coin** (Customer)
-  - Coin Inserted
-  - Coin Rejected: Invalid Coin
-  - Coin Rejected: Refund Not Guaranteed (1 coin the machine could not give back, see D-001)
+  - Event: Coin Inserted
+  - Exceptions: Invalid Coin; Refund Not Guaranteed (1 coin the machine could not give back, see D-001)
 - **Select Item** (Customer)
-  - Item Dispensed, plus Change Dispensed when there is change
-  - Purchase Rejected: Out of Stock
-  - Purchase Rejected: Insufficient Funds
-  - Purchase Rejected: Change Unavailable
+  - Events: Item Dispensed, plus Change Dispensed when there is change
+  - Exceptions: Out of Stock; Insufficient Funds; Change Unavailable
 - **Return Coin** (Customer)
-  - Coins Returned
+  - Event: Coins Returned
 - **Service Machine** (Service Operator)
-  - Machine Serviced
+  - Event: Machine Serviced
