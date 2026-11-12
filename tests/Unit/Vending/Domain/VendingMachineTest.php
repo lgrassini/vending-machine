@@ -32,4 +32,14 @@ final class VendingMachineTest extends TestCase
 
         self::assertEquals([new CoinInserted(Coin::TwentyFiveCents)], $machine->releaseEvents());
     }
+
+    #[Test]
+    public function it_keeps_inserted_change_coins_as_available_change(): void
+    {
+        $machine = new VendingMachine();
+
+        $machine->insertCoin(Coin::TwentyFiveCents);
+
+        self::assertSame(1, $machine->availableChange()->count(Coin::TwentyFiveCents));
+    }
 }
