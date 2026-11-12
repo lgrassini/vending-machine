@@ -16,4 +16,9 @@ final class Item
             throw new \InvalidArgumentException("Stock can't be negative, got {$stock}.");
         }
     }
+
+    public function dispense(): void
+    {
+        $this->stock--;
+    }
 }
