@@ -179,4 +179,20 @@ final class VendingMachineTest extends TestCase
         );
         self::assertTrue($machine->balance()->isZero());
     }
+
+    #[Test]
+    public function it_removes_dispensed_change_from_available_change(): void
+    {
+        $machine = new VendingMachine(
+            Coins::of(Coin::TenCents),
+            new Item(new Selector('WATER'), Money::fromCents(65), 1),
+        );
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->insertCoin(Money::fromCents(25));
+
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertSame(0, $machine->availableChange()->count(Coin::TenCents));
+    }
 }

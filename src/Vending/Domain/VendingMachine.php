@@ -65,10 +65,7 @@ final class VendingMachine
         $coins = new ChangeCalculator()->calculate($this->balance, $this->availableChange)
             ?? throw new \LogicException("Balance of {$this->balance->cents()} cents can't be refunded from Available Change.");
 
-        foreach ($coins as $coin) {
-            $this->availableChange = $this->availableChange->remove($coin);
-        }
-
+        $this->removeFromAvailableChange($coins);
         $this->balance = Money::fromCents(0);
         $this->events[] = new CoinsReturned($coins);
     }
@@ -85,6 +82,7 @@ final class VendingMachine
 
         if (!$change->isZero()) {
             $coins = new ChangeCalculator()->calculate($change, $this->availableChange) ?? [];
+            $this->removeFromAvailableChange($coins);
             $this->events[] = new ChangeDispensed($coins);
         }
     }
@@ -111,5 +109,13 @@ final class VendingMachine
         $this->events = [];
 
         return $events;
+    }
+
+    /** @param list<Coin> $coins */
+    private function removeFromAvailableChange(array $coins): void
+    {
+        foreach ($coins as $coin) {
+            $this->availableChange = $this->availableChange->remove($coin);
+        }
     }
 }
