@@ -53,3 +53,9 @@ supporting currencies without cents, like yen, now (speculative).
 ## D-009: CLI as the interface
 
 - **Decision**: customers and operators use two command-line entry points. See [ADR-003](docs/adr/003-cli-as-the-interface.md).
+
+## D-010: CLI formats
+
+- **Decision**: each input line holds comma-separated actions and gets one `->` output line, as in the spec. SERVICE is `SERVICE, WATER=0.65x10, 0.05x20`: items as `SELECTOR=PRICExSTOCK`, change as `VALUExCOUNT`. Output shows what the machine hands out, plus the reason when it refuses: `0.01 (INVALID COIN)`, `INSUFFICIENT FUNDS`, `SERVICED`. STATUS, not in the spec, shows items, prices and Balance; `bin/service` adds Available Change.
+- **Consequence**: the spec's examples run verbatim. A new product is one more `SELECTOR=PRICExSTOCK`. Unknown actions are input errors handled by the CLI, never reaching the domain.
+- **Discarded**: a SERVICE config file (JSON/YAML), an extra format to maintain for one line of input; silent rejections (the spec gives no output for them, but a silent refusal leaves the customer guessing).

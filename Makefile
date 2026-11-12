@@ -1,6 +1,6 @@
 RUN = docker compose run --rm -T app
 
-.PHONY: install test coverage lint fix
+.PHONY: install test coverage lint fix vending service
 
 install:
 	docker compose build
@@ -19,3 +19,10 @@ lint:
 
 fix:
 	$(RUN) vendor/bin/php-cs-fixer fix
+
+# Interactive sessions (no -T): the customer panel and the service panel share var/vending.sqlite.
+vending:
+	docker compose run --rm app bin/vending
+
+service:
+	docker compose run --rm app bin/service
