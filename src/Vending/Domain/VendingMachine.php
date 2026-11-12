@@ -72,7 +72,13 @@ final class VendingMachine
 
     public function selectItem(Selector $selector): void
     {
-        $item = $this->items[$selector->value];
+        $item = $this->items[$selector->value] ?? null;
+
+        if ($item === null) {
+            $this->events[] = new PurchaseRejected($selector, PurchaseRejectionReason::UnknownItem);
+
+            return;
+        }
 
         $change = $this->balance->subtract($item->price);
 
