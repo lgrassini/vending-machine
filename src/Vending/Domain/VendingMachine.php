@@ -24,6 +24,16 @@ final class VendingMachine
         $this->replaceItems(...$items);
     }
 
+    /** Rebuilds a machine from stored state; for repositories only. */
+    public static function reconstitute(Money $balance, Coins $availableChange, Coins $cashBox, Item ...$items): self
+    {
+        $machine = new self($availableChange, ...$items);
+        $machine->balance = $balance;
+        $machine->cashBox = $cashBox;
+
+        return $machine;
+    }
+
     public function insertCoin(Money $inserted): void
     {
         $coin = Coin::tryFromMoney($inserted);
