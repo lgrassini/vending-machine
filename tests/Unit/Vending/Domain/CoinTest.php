@@ -18,6 +18,13 @@ final class CoinTest extends TestCase
     }
 
     #[Test]
+    public function it_is_identified_by_its_value_or_not_at_all(): void
+    {
+        self::assertSame(Coin::TwentyFiveCents, Coin::tryFromMoney(Money::fromCents(25)));
+        self::assertNull(Coin::tryFromMoney(Money::fromCents(1)));
+    }
+
+    #[Test]
     public function it_never_returns_1_coins(): void
     {
         self::assertFalse(Coin::One->isReturnable());

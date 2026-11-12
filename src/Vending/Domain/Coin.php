@@ -12,6 +12,12 @@ enum Coin: int
     case TwentyFiveCents = 25;
     case One = 100;
 
+    /** null when no accepted coin has that value (an Invalid Coin). */
+    public static function tryFromMoney(Money $money): ?self
+    {
+        return self::tryFrom($money->cents());
+    }
+
     public function money(): Money
     {
         return Money::fromCents($this->value);
