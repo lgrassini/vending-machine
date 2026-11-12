@@ -42,7 +42,7 @@ final class CliTest extends TestCase
 
         $output = $this->execute('service', "STATUS\n");
 
-        self::assertSame("-> WATER=0.65x9, BALANCE 0, 0.05x20, 0.10x19, 0.25x19\n", $output);
+        self::assertSame("-> WATER=0.65x9, BALANCE 0, 0.05x20, 0.10x19, 0.25x19, CASH BOX 1x1\n", $output);
     }
 
     #[Test]

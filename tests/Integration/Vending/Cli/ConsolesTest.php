@@ -87,7 +87,7 @@ final class ConsolesTest extends TestCase
         $this->service();
 
         self::assertSame(
-            '-> WATER=0.65x10, SODA=1.50x8, BALANCE 0, 0.05x20, 0.10x20, 0.25x20',
+            '-> WATER=0.65x10, SODA=1.50x8, BALANCE 0, 0.05x20, 0.10x20, 0.25x20, CASH BOX 0',
             $this->operator->handle('STATUS'),
         );
     }
@@ -96,7 +96,7 @@ final class ConsolesTest extends TestCase
     public function it_services_nothing_when_a_part_is_invalid(): void
     {
         self::assertSame('-> INVALID SERVICE: 1x10', $this->operator->handle('SERVICE, WATER=0.65x10, 1x10'));
-        self::assertSame('-> BALANCE 0', $this->operator->handle('STATUS'));
+        self::assertSame('-> BALANCE 0, CASH BOX 0', $this->operator->handle('STATUS'));
     }
 
     #[Test]
