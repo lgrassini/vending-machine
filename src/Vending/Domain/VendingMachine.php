@@ -77,9 +77,16 @@ final class VendingMachine
     {
         $item = $this->items[$selector->value];
 
+        $change = $this->balance->subtract($item->price);
+
         $item->dispense();
-        $this->balance = $this->balance->subtract($item->price);
+        $this->balance = Money::fromCents(0);
         $this->events[] = new ItemDispensed($selector);
+
+        if (!$change->isZero()) {
+            $coins = new ChangeCalculator()->calculate($change, $this->availableChange) ?? [];
+            $this->events[] = new ChangeDispensed($coins);
+        }
     }
 
     public function balance(): Money

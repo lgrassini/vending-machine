@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Vending\Domain;
 
+use App\Vending\Domain\ChangeDispensed;
 use App\Vending\Domain\Coin;
 use App\Vending\Domain\CoinInserted;
 use App\Vending\Domain\CoinRejected;
@@ -156,5 +157,26 @@ final class VendingMachineTest extends TestCase
         $machine->selectItem(new Selector('WATER'));
 
         self::assertSame(1, $water->stock);
+    }
+
+    #[Test]
+    public function it_dispenses_change_when_the_balance_exceeds_the_price(): void
+    {
+        $machine = new VendingMachine(
+            Coins::of(Coin::TenCents),
+            new Item(new Selector('WATER'), Money::fromCents(65), 1),
+        );
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->insertCoin(Money::fromCents(25));
+        $machine->releaseEvents();
+
+        $machine->selectItem(new Selector('WATER'));
+
+        self::assertEquals(
+            [new ItemDispensed(new Selector('WATER')), new ChangeDispensed([Coin::TenCents])],
+            $machine->releaseEvents(),
+        );
+        self::assertTrue($machine->balance()->isZero());
     }
 }
