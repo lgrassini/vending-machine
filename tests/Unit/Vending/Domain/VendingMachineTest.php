@@ -101,4 +101,21 @@ final class VendingMachineTest extends TestCase
         self::assertEquals([new CoinsReturned([Coin::TwentyFiveCents, Coin::TenCents])], $machine->releaseEvents());
         self::assertTrue($machine->balance()->isZero());
     }
+
+    #[Test]
+    public function it_returns_a_1_coin_in_smaller_coins(): void
+    {
+        $machine = new VendingMachine(
+            Coins::of(Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents),
+        );
+        $machine->insertCoin(Money::fromCents(100));
+        $machine->releaseEvents();
+
+        $machine->returnCoin();
+
+        self::assertEquals(
+            [new CoinsReturned([Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents, Coin::TwentyFiveCents])],
+            $machine->releaseEvents(),
+        );
+    }
 }
