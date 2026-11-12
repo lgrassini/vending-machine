@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Vending\Application\GetMachineStatusHandler;
+use App\Vending\Application\ServiceMachineHandler;
+use App\Vending\Infrastructure\Cli\ServiceConsole;
+use App\Vending\Infrastructure\Cli\Terminal;
+
+// The operator entry point: the service panel behind the locked door (ADR-003).
+$repository = require __DIR__ . '/bootstrap.php';
+
+$console = new ServiceConsole(
+    new ServiceMachineHandler($repository),
+    new GetMachineStatusHandler($repository),
+);
+
+Terminal::run($console->handle(...));

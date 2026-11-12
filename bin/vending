@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Vending\Application\GetMachineStatusHandler;
+use App\Vending\Application\InsertCoinHandler;
+use App\Vending\Application\ReturnCoinHandler;
+use App\Vending\Application\SelectItemHandler;
+use App\Vending\Infrastructure\Cli\CustomerConsole;
+use App\Vending\Infrastructure\Cli\Terminal;
+
+// The customer entry point: the machine's front panel (ADR-003).
+$repository = require __DIR__ . '/bootstrap.php';
+
+$console = new CustomerConsole(
+    new InsertCoinHandler($repository),
+    new SelectItemHandler($repository),
+    new ReturnCoinHandler($repository),
+    new GetMachineStatusHandler($repository),
+);
+
+Terminal::run($console->handle(...));
