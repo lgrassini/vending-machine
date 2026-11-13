@@ -8,6 +8,8 @@ The event storming board: commands, events, rules and the Vending Machine aggreg
 
 ![Event storming board](docs/event-storming.png)
 
+[Open the board in Excalidraw](https://link.excalidraw.com/l/13sKWn0QqHJ/9iDXPnklfiC)
+
 
 ## Requirements
 
